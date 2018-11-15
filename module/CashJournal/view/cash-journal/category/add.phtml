@@ -1,0 +1,12 @@
+<a href="<?php echo $this->url('categories') ?>" class="btn btn-success">zurück</a>
+<hr>
+<?php
+    $form = $this->form;
+    $form->setAttribute('action', join('/', [$this->url(), 'add']));
+    $form->prepare();
+
+    echo $this->form()->openTag($form);
+
+    echo $this->formCollection($form);
+
+    echo $this->form()->closeTag();
