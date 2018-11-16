@@ -6,9 +6,9 @@ use Zend\Filter\StringTrim;
 use Zend\InputFilter\InputFilter;
 use Zend\Validator\StringLength;
 
-class CategoryFilter extends InputFilter
+class CategoryFieldSetFilter extends InputFilter
 {
-    public function __construct()
+    public function init()
     {
         $this->add([
             'name' => 'name',
@@ -25,5 +25,7 @@ class CategoryFilter extends InputFilter
                 ]
             ]
         ]);
+
+        #parent::init();
     }
 }

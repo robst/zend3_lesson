@@ -1,19 +1,21 @@
 <?php
 
-namespace CashJournal\Factory\Controller;
+namespace CashJournal\Factory\Form;
 
+use CashJournal\Filter\CategoryFieldSetFilter;
+use CashJournal\Filter\CategoryFormFilter;
 use CashJournal\Form\CategoryForm;
-use CashJournal\Mapper\CategoryMapper;
 use Interop\Container\ContainerInterface;
 use Interop\Container\Exception\ContainerException;
+use Zend\Hydrator\HydratorOptionsInterface;
+use Zend\InputFilter\InputFilterPluginManager;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use CashJournal\Controller\CategoryController;
-use CashJournal\Filter\CategoryFieldSetFilter;
 
-class CategoryControllerFactory implements FactoryInterface
+class CategoryFormFactory implements FactoryInterface
 {
+
     /**
      * Create an object
      *
@@ -29,11 +31,13 @@ class CategoryControllerFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $form = $container->get('FormElementManager')->get(CategoryForm::class);
+        /** @var InputFilterPluginManager $inputFilterPluginManager */
+        $inputFilterPluginManager = $container->get('InputFilterManager');
+        $inputFilter = $inputFilterPluginManager->build(CategoryFormFilter::class);
 
-        return new CategoryController(
-            $container->get(CategoryMapper::class),
-            $form
-        );
+        $form = new CategoryForm();
+        $form->setInputFilter($inputFilter); // The setter injection you're after
+
+        return $form;
     }
 }

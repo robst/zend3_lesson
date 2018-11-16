@@ -24,6 +24,7 @@ return [
     'Zend\Db',
     'Zend\Router',
     'Zend\Validator',
+    'Zend\InputFilter',
     'ZendDeveloperTools',
     'Application',
     'CashJournal',

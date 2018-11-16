@@ -12,5 +12,5 @@
  */
 
 return [
-    // ...
+    'db' => include __DIR__ . '/../db.config.php',
 ];

@@ -13,6 +13,7 @@ class CategoryForm extends Form
     public function init()
     {
         $this->add([
+            'name' => 'category',
             'type' => CategoryFieldSet::class,
             'options' => [
                 'use_as_base_fieldset' => true,
@@ -23,5 +24,7 @@ class CategoryForm extends Form
             'name' => 'submit',
             'type' => 'submit'
         ]);
+
+        parent::init();
     }
 }

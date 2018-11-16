@@ -1,19 +1,18 @@
 <?php
 
-namespace CashJournal\Factory\Controller;
+namespace CashJournal\Factory\Filter;
 
-use CashJournal\Form\CategoryForm;
-use CashJournal\Mapper\CategoryMapper;
+use CashJournal\Filter\CategoryFieldSetFilter;
+use CashJournal\Filter\CategoryFormFilter;
 use Interop\Container\ContainerInterface;
 use Interop\Container\Exception\ContainerException;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use CashJournal\Controller\CategoryController;
-use CashJournal\Filter\CategoryFieldSetFilter;
 
-class CategoryControllerFactory implements FactoryInterface
+class CategoryFormFilterFactory implements FactoryInterface
 {
+
     /**
      * Create an object
      *
@@ -29,11 +28,12 @@ class CategoryControllerFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $form = $container->get('FormElementManager')->get(CategoryForm::class);
+        $inputFilterPluginManager = $container->get('InputFilterManager');
+        /** @var CategoryFieldSetFilter $inputFilter */
+        $inputFilter = $inputFilterPluginManager->get(CategoryFieldSetFilter::class);
 
-        return new CategoryController(
-            $container->get(CategoryMapper::class),
-            $form
-        );
+        $filter = new CategoryFormFilter($inputFilter);
+
+        return $filter;
     }
 }
