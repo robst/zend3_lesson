@@ -29,4 +29,7 @@
     <file>config</file>
     <file>module</file>
     <file>public/index.php</file>
+
+    <exclude-pattern>*/view/*</exclude-pattern>
+    <exclude-pattern>*/config/*</exclude-pattern>
 </ruleset>

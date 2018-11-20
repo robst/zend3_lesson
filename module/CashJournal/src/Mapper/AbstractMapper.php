@@ -5,7 +5,6 @@ namespace CashJournal\Mapper;
 use CashJournal\Model\EntityInterface;
 use Doctrine\ORM\EntityManager;
 
-
 class AbstractMapper implements MapperInterface
 {
     /** @var EntityManager */

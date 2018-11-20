@@ -1,0 +1,14 @@
+<a href="<?php echo $this->url('entries') ?>" class="btn btn-success">zurück</a>
+<hr>
+<?php
+    /** @var \CashJournal\Form\EntryForm $form */
+    $form = $this->form;
+
+    $form->setAttribute('action', join('/', [$this->url(), 'edit', $form->getObject()->getId()]));
+    $form->prepare();
+
+    echo $this->form()->openTag($form);
+
+    echo $this->formCollection($form);
+
+    echo $this->form()->closeTag();

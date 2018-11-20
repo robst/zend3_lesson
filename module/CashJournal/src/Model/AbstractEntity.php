@@ -32,4 +32,9 @@ abstract class AbstractEntity implements EntityInterface
         $this->id = $id;
         return $this;
     }
+
+    public function toInt()
+    {
+        return (int) $this->getId();
+    }
 }

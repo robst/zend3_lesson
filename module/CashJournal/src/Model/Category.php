@@ -24,7 +24,12 @@ class Category extends AbstractEntity
     /**
      * @var Collection|ArrayCollection|Entry[]
      *
-     * @ORM\OneToMany(targetEntity="CashJournal\Model\Entry", mappedBy="category", fetch="EAGER", orphanRemoval=true, cascade={"persist", "remove"})
+     * @ORM\OneToMany(
+     *     targetEntity="CashJournal\Model\Entry",
+     *     mappedBy="category", fetch="EAGER",
+     *     orphanRemoval=true,
+     *     cascade={"persist", "remove"}
+     * )
      */
     private $entries;
 
@@ -33,7 +38,7 @@ class Category extends AbstractEntity
      */
     public function getIssue(): bool
     {
-        return (int) $this->issue;
+        return (bool) $this->issue;
     }
 
     /**
@@ -58,5 +63,13 @@ class Category extends AbstractEntity
     public function setEntries(Collection $entries): void
     {
         $this->entries = $entries;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return (string) $this->getName();
     }
 }

@@ -1,18 +1,18 @@
 <?php
 
-namespace CashJournal\Factory\FieldSet;
+namespace CashJournal\Factory\Filter;
 
-use CashJournal\Form\FieldSet\CategoryFieldSet;
-use CashJournal\Model\Category;
+use CashJournal\Filter\EntryFieldSetFilter;
+use CashJournal\Filter\EntryFormFilter;
 use Interop\Container\ContainerInterface;
 use Interop\Container\Exception\ContainerException;
-use Zend\Hydrator\HydratorOptionsInterface;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
-class CategoryFieldSetFactory implements FactoryInterface
+class EntryFormFilterFactory implements FactoryInterface
 {
+
     /**
      * Create an object
      *
@@ -28,12 +28,12 @@ class CategoryFieldSetFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $fieldSet = new CategoryFieldSet();
-        $fieldSet->setHydrator(
-            $container->get(HydratorOptionsInterface::class)
-        );
-        $fieldSet->setObject(new Category());
+        $inputFilterPluginManager = $container->get('InputFilterManager');
+        /** @var EntryFieldSetFilter $inputFilter */
+        $inputFilter = $inputFilterPluginManager->get(EntryFieldSetFilter::class);
 
-        return $fieldSet;
+        $filter = new EntryFormFilter($inputFilter);
+
+        return $filter;
     }
 }

@@ -37,6 +37,35 @@ class Entry extends AbstractEntity
     private $dateOfEntry;
 
     /**
+     * @return float
+     */
+    public function getFormattedAmount(): float
+    {
+        if (null === $this->getAmount()) {
+            return (float) 0;
+        }
+
+        if ($this->isInIssueCategory()) {
+            return (float) $this->getAmount() * -1;
+        }
+
+        return (float) $this->getAmount();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInIssueCategory(): bool
+    {
+        $category = $this->getCategory();
+
+        if (null === $category) {
+            return false;
+        }
+        return $category->getIssue();
+    }
+
+    /**
      * @return null|float
      */
     public function getAmount(): ?float

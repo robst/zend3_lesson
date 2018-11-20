@@ -2,8 +2,8 @@
 
 namespace CashJournal\Factory\FieldSet;
 
-use CashJournal\Form\FieldSet\CategoryFieldSet;
-use CashJournal\Model\Category;
+use CashJournal\Form\FieldSet\EntryFieldSet;
+use CashJournal\Model\Entry;
 use Interop\Container\ContainerInterface;
 use Interop\Container\Exception\ContainerException;
 use Zend\Hydrator\HydratorOptionsInterface;
@@ -11,7 +11,7 @@ use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
-class CategoryFieldSetFactory implements FactoryInterface
+class EntryFieldSetFactory implements FactoryInterface
 {
     /**
      * Create an object
@@ -28,11 +28,11 @@ class CategoryFieldSetFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $fieldSet = new CategoryFieldSet();
+        $fieldSet = new EntryFieldSet();
         $fieldSet->setHydrator(
             $container->get(HydratorOptionsInterface::class)
         );
-        $fieldSet->setObject(new Category());
+        $fieldSet->setObject(new Entry());
 
         return $fieldSet;
     }

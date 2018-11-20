@@ -51,11 +51,16 @@
             "@development-enable"
         ],
         "serve": "php -S 0.0.0.0:8080 -t public public/index.php",
-        "test": "phpunit"
+        "test": "phpunit",
+        "sniff": "vendor/bin/phpcs",
+        "psalm": "vendor/bin/psalm --show-info=false"
     },
     "require-dev": {
         "zendframework/zend-developer-tools": "^1.1.0",
         "zendframework/zend-test": "^3.0.1",
-        "bjyoungblood/bjy-profiler": "^1.1"
+        "bjyoungblood/bjy-profiler": "^1.1",
+        "escapestudios/symfony2-coding-standard": "^3.4.1",
+        "squizlabs/php_codesniffer": "^3.3",
+        "vimeo/psalm": "^2.0.6"
     }
 }

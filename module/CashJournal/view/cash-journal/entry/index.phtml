@@ -1,0 +1,21 @@
+<a href="<?php echo $this->url('entries', ['action' => 'add']) ?>" class="btn btn-success">new</a>
+
+<table class="table">
+    <?php /** @var \CashJournal\Model\Entry $entry */ ?>
+    <?php foreach ($this->entries as $entry) : ?>
+        <?php
+            $deleteLink = $this->url('entries', ['action' => 'delete', 'id' => $entry->getId()], true);
+            $editLink = $this->url('entries', ['action' => 'edit', 'id' => $entry->getId()]);
+        ?>
+    <tr>
+        <td><?php echo $entry->getName() ?> <?php echo $entry->getFormattedAmount() ?></td>
+        <td><a href="<?php echo $editLink ?>" class="btn btn-info">edit</a></td>
+        <td>
+            <form action="<?php echo $deleteLink ?>" method="post">
+                <input type="submit" name="delete_confirmation" value="delete" class="btn btn-danger">
+            </form>
+        </td>
+    </tr>
+
+    <?php endforeach; ?>
+</table>
