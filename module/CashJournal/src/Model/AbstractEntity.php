@@ -27,7 +27,7 @@ abstract class AbstractEntity implements EntityInterface
      *
      * @return AbstractEntity
      */
-    public function setId(int $id): AbstractEntity
+    public function setId($id): AbstractEntity
     {
         $this->id = $id;
         return $this;

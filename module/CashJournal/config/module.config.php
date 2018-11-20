@@ -10,8 +10,7 @@ use CashJournal\Factory\Form\CategoryFormFactory;
 use CashJournal\Factory\Mapper\CategoryMapperFactory;
 use CashJournal\Form\FieldSet\CategoryFieldSet;
 use CashJournal\Mapper\CategoryMapper;
-use Zend\Db\Adapter\AdapterInterface;
-use Zend\Db\Sql\Sql;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Zend\Hydrator\ClassMethods;
 use Zend\Hydrator\HydratorOptionsInterface;
 use CashJournal\Filter\CategoryFieldSetFilter;
@@ -19,6 +18,8 @@ use CashJournal\Factory\Filter\CategoryFieldSetFilterFactory;
 use CashJournal\Form\CategoryForm;
 use CashJournal\Filter\CategoryFormFilter;
 use CashJournal\Factory\Filter\CategoryFormFilterFactory;
+use Doctrine\DBAL\Driver\PDOMySql\Driver as PDOMySqlDriver;
+
 
 return [
 
@@ -38,10 +39,6 @@ return [
             HydratorOptionsInterface::class => ClassMethods::class,
         ],
         'factories' => [
-            Sql::class => function ($container) {
-                return new Sql($container->get(AdapterInterface::class));
-            },
-
             CategoryMapper::class => CategoryMapperFactory::class,
         ],
     ],
@@ -63,5 +60,28 @@ return [
         'template_path_stack' => [
             __DIR__ . '/../view',
         ],
+    ],
+    'doctrine' => [
+        'connection' => [
+            'orm_default' => [
+                'driverClass' => PDOMySqlDriver::class,
+                'params' => include __DIR__.'/../../../config/db.config.php',
+            ],
+        ],
+        'driver' => [
+            __NAMESPACE__ . '_driver' => [
+                'class' => AnnotationDriver::class,
+                'cache' => 'array',
+                'paths' => [
+                    __DIR__ . DIRECTORY_SEPARATOR,
+                ]
+            ],
+            'orm_default' => [
+                'drivers' => [
+                    __NAMESPACE__ . '\Model' => __NAMESPACE__ . '_driver'
+                ],
+            ],
+        ],
+
     ],
 ];

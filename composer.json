@@ -25,7 +25,8 @@
         "zendframework/zend-session": "^2.7.1",
         "zendframework/zend-servicemanager-di": "^1.0",
         "zendframework/zend-inputfilter": "^2.8",
-        "doctrine/orm": "^2.6"
+        "doctrine/orm": "^2.6",
+        "doctrine/doctrine-orm-module": "^2.1"
     },
     "autoload": {
         "psr-4": {
@@ -54,6 +55,7 @@
     },
     "require-dev": {
         "zendframework/zend-developer-tools": "^1.1.0",
-        "zendframework/zend-test": "^3.0.1"
+        "zendframework/zend-test": "^3.0.1",
+        "bjyoungblood/bjy-profiler": "^1.1"
     }
 }

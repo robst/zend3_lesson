@@ -9,8 +9,6 @@ use Interop\Container\Exception\ContainerException;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Zend\Db\Sql\Sql;
-use Zend\Hydrator\HydratorOptionsInterface;
 
 class CategoryMapperFactory implements FactoryInterface
 {
@@ -21,7 +19,8 @@ class CategoryMapperFactory implements FactoryInterface
      * @param  string $requestedName
      * @param  null|array $options
      *
-     * @return object
+     * @return CategoryMapper
+     *
      * @throws ServiceNotFoundException if unable to resolve the service.
      * @throws ServiceNotCreatedException if an exception is raised when
      *     creating a service.
@@ -30,9 +29,8 @@ class CategoryMapperFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         return new CategoryMapper(
-            $container->get(Sql::class),
-            $container->get(HydratorOptionsInterface::class),
-            new Category()
+            $container->get('doctrine.entitymanager.orm_default'),
+            Category::class
         );
     }
 }
