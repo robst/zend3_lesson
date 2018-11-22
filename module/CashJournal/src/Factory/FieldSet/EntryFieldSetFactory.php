@@ -4,9 +4,10 @@ namespace CashJournal\Factory\FieldSet;
 
 use CashJournal\Form\FieldSet\EntryFieldSet;
 use CashJournal\Model\Entry;
+use Doctrine\ORM\EntityManager;
+use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use Interop\Container\ContainerInterface;
 use Interop\Container\Exception\ContainerException;
-use Zend\Hydrator\HydratorOptionsInterface;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\Factory\FactoryInterface;
@@ -28,11 +29,15 @@ class EntryFieldSetFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
+        $entityManager = $container->get(EntityManager::class);
         $fieldSet = new EntryFieldSet();
+
         $fieldSet->setHydrator(
-            $container->get(HydratorOptionsInterface::class)
+            new DoctrineObject($entityManager)
         );
         $fieldSet->setObject(new Entry());
+        $fieldSet->setObjectManager($entityManager);
+
 
         return $fieldSet;
     }

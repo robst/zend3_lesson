@@ -4,11 +4,14 @@ namespace CashJournal\Controller;
 
 use CashJournal\Mapper\MapperInterface;
 use CashJournal\Model\Entry;
+use CashJournal\Util\ObjectManagerTrait;
+use DoctrineModule\Persistence\ObjectManagerAwareInterface;
 use Zend\Form\Form;
 use Zend\Mvc\Controller\AbstractActionController;
 
-class EntryController extends AbstractActionController
+class EntryController extends AbstractActionController implements ObjectManagerAwareInterface
 {
+    use ObjectManagerTrait;
     /**
      * @var MapperInterface
      */
@@ -54,14 +57,15 @@ class EntryController extends AbstractActionController
             $this->form->setData($request->getPost());
 
             if ($this->form->isValid()) {
-                $this->mapper->save($this->form->getData());
-
-                $this->redirect()->toRoute('entries');
+                if ($this->mapper->save($this->form->getData())) {
+                    $this->redirect()->toRoute('entries');
+                }
             }
+
         }
 
         return [
-            'form' => $this->form
+            'form' => $this->form, 'error' => $this->mapper->getExceptionMessage()
         ];
     }
 
@@ -82,8 +86,9 @@ class EntryController extends AbstractActionController
             $this->form->setData($request->getPost());
 
             if ($this->form->isValid()) {
-                $this->mapper->save($this->form->getData());
-                $this->redirect()->toRoute('entries');
+                if ($this->mapper->save($this->form->getData())) {
+                    $this->redirect()->toRoute('entries');
+                }
             }
         }
 
@@ -93,6 +98,9 @@ class EntryController extends AbstractActionController
     }
 
 
+    /**
+     * @throws \Exception
+     */
     public function deleteAction()
     {
         $category = $this->mapper->find($this->params('id'));

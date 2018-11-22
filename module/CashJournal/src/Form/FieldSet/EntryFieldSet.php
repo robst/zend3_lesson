@@ -3,15 +3,19 @@
 namespace CashJournal\Form\FieldSet;
 
 use CashJournal\Model\Category;
+use CashJournal\Util\ObjectManagerTrait;
 use DoctrineModule\Form\Element\ObjectSelect;
+use DoctrineModule\Persistence\ObjectManagerAwareInterface;
 use Zend\Form\Element\Date;
 use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Number;
 use Zend\Form\Element\Text;
 use Zend\Form\Fieldset;
 
-class EntryFieldSet extends Fieldset
+class EntryFieldSet extends Fieldset implements ObjectManagerAwareInterface
 {
+    use ObjectManagerTrait;
+
     /**
      * {@inheritDoc}
      */
@@ -42,15 +46,27 @@ class EntryFieldSet extends Fieldset
             'name' => 'date_of_entry',
             'type' => Date::class,
             'options' => [
-                'label' => 'Datum'
+                'label' => 'Datum',
+                'format' => 'Y-m-d',
+            ],
+            'attributes' => [
+                'step' => 'any',
             ]
         ]);
 
         $this->add([
             'name' => 'category',
+            'required' => false,
             'type' => ObjectSelect::class,
             'options' => [
                 'target_class' => Category::class,
+                'object_manager' => $this->getObjectManager(),
+                'property'       => 'id',
+                'display_empty_item' => true,
+                'empty_item_label'   => '---',
+                'label_generator' => function ($targetEntity) {
+                    return $targetEntity->getName();
+                },
             ]
         ]);
 

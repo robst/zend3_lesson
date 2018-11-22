@@ -4,7 +4,10 @@
     /** @var \CashJournal\Form\EntryForm $form */
     $form = $this->form;
 
-    $form->setAttribute('action', join('/', [$this->url(), 'edit', $form->getObject()->getId()]));
+    /** @var \CashJournal\Model\Entry $entry */
+    $entry = $form->getObject();
+
+    $form->setAttribute('action', join('/', [$this->url(), 'edit', $entry->getId()]));
     $form->prepare();
 
     echo $this->form()->openTag($form);

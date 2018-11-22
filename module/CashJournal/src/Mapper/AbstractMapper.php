@@ -4,6 +4,7 @@ namespace CashJournal\Mapper;
 
 use CashJournal\Model\EntityInterface;
 use Doctrine\ORM\EntityManager;
+use Exception;
 
 class AbstractMapper implements MapperInterface
 {
@@ -12,6 +13,11 @@ class AbstractMapper implements MapperInterface
 
     /** @var string */
     protected $entityClassName;
+
+    /**
+     * @var Exception
+     */
+    protected $exception;
 
     /**
      * AbstractMapper constructor.
@@ -56,7 +62,8 @@ class AbstractMapper implements MapperInterface
         try {
             $this->entityManager->persist($postObject);
             $this->entityManager->flush();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            $this->setException($e);
             return false;
         }
 
@@ -75,7 +82,8 @@ class AbstractMapper implements MapperInterface
         try {
             $this->entityManager->remove($postObject);
             $this->entityManager->flush();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            $this->setException($e);
             return false;
         }
 
@@ -88,5 +96,32 @@ class AbstractMapper implements MapperInterface
     protected function getRepository()
     {
         return $this->entityManager->getRepository($this->entityClassName);
+    }
+
+    /**
+     * @param Exception $e
+     */
+    protected function setException(Exception $e)
+    {
+        $this->exception = $e;
+    }
+
+    /**
+     * @return Exception
+     */
+    public function getException(): ?Exception
+    {
+        return $this->exception;
+    }
+
+    public function getExceptionMessage(): string
+    {
+        $exception = $this->getException();
+
+        if (null === $exception) {
+            return '';
+        }
+
+        return $exception->getMessage();
     }
 }

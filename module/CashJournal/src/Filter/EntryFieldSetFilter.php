@@ -5,8 +5,10 @@ namespace CashJournal\Filter;
 use CashJournal\Mapper\MapperInterface;
 use Zend\Filter\StringTrim;
 use Zend\InputFilter\InputFilter;
+use Zend\Validator\Date;
 use Zend\Validator\StringLength;
 use Zend\Filter\Callback;
+use DateTime;
 
 class EntryFieldSetFilter extends InputFilter
 {
@@ -25,6 +27,9 @@ class EntryFieldSetFilter extends InputFilter
         $this->mapper = $mapper;
     }
 
+    /**
+     * @{inheritDoc}
+     */
     public function init()
     {
         $this->add([
@@ -45,52 +50,29 @@ class EntryFieldSetFilter extends InputFilter
 
         $this->add([
             'name' => 'date_of_entry',
-            'required' => true,
+            'required' => false,
             'filters' => [
                 [
                     'name' => Callback::class,
-                    'options' => [
-                        'callback' => [$this, 'convertStringToDate']
-                    ]
+                    'options' => array(
+                        'callback' => function($value) {
+                            if (is_string($value)) {
+                                $value = new DateTime($value);
+                            }
+                            return $value;
+                        },
+                    ),
                 ]
-            ]
+            ],
+
+            'validators' => array(
+                array(
+                    'name' => Date::class,
+                    'options' => array(
+                        'format' => 'Y-m-d',
+                    ),
+                ),
+            ),
         ]);
-
-        $this->add([
-            'name' => 'category',
-            'required' => true,
-            'filters' => [
-                [
-                    'name' => Callback::class,
-                    'options' => [
-                        'callback' => [$this, 'loadCategory']
-                    ]
-                ]
-            ]
-        ]);
-    }
-
-    /**
-     * @param string $date
-     *
-     * @return \DateTime
-     */
-    public function convertStringToDate(string $date)
-    {
-        return new \DateTime($date);
-    }
-
-    /**
-     * @param string $categoryId
-     *
-     * @return \CashJournal\Model\EntityInterface|string
-     */
-    public function loadCategory(string $categoryId)
-    {
-        #return $this->mapper->find($categoryId);
-
-        return $categoryId;
-        // PHP Notice:  Object of class CashJournal\Model\Category could not be converted to int in
-        return $this->mapper->find($categoryId);
     }
 }

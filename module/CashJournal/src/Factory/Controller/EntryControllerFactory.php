@@ -28,12 +28,14 @@ class EntryControllerFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        // TODO
         $form = $container->get('FormElementManager')->get(EntryForm::class);
 
-        return new EntryController(
+        $controller = new EntryController(
             $container->get(EntryMapper::class),
             $form
         );
+
+        $controller->setObjectManager($container->get('doctrine.entitymanager.orm_default'));
+        return $controller;
     }
 }
