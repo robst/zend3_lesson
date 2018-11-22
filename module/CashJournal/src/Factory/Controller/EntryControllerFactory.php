@@ -4,12 +4,13 @@ namespace CashJournal\Factory\Controller;
 
 use CashJournal\Controller\EntryController;
 use CashJournal\Form\EntryForm;
-use CashJournal\Mapper\EntryMapper;
+use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Interop\Container\Exception\ContainerException;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\Factory\FactoryInterface;
+use CashJournal\Model\Entry;
 
 class EntryControllerFactory implements FactoryInterface
 {
@@ -29,13 +30,16 @@ class EntryControllerFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $form = $container->get('FormElementManager')->get(EntryForm::class);
+        /** @var EntityManager $entityManager */
+        $entityManager = $container->get(EntityManager::class);
+        $repository = $entityManager->getRepository(Entry::class);
 
         $controller = new EntryController(
-            $container->get(EntryMapper::class),
+            $entityManager,
+            $repository,
             $form
         );
 
-        $controller->setObjectManager($container->get('doctrine.entitymanager.orm_default'));
         return $controller;
     }
 }

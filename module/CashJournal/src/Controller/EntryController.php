@@ -2,50 +2,23 @@
 
 namespace CashJournal\Controller;
 
-use CashJournal\Mapper\MapperInterface;
 use CashJournal\Model\Entry;
-use CashJournal\Util\ObjectManagerTrait;
-use DoctrineModule\Persistence\ObjectManagerAwareInterface;
-use Zend\Form\Form;
-use Zend\Mvc\Controller\AbstractActionController;
+use \Zend\Http\Response;
 
-class EntryController extends AbstractActionController implements ObjectManagerAwareInterface
+class EntryController extends AbstractActionController
 {
-    use ObjectManagerTrait;
-    /**
-     * @var MapperInterface
-     */
-    protected $mapper;
-
-    /**
-     * @var Form
-     */
-    protected $form;
-
-    /**
-     * CategoryController constructor.
-     *
-     * @param MapperInterface $mapper
-     * @param Form            $form
-     */
-    public function __construct(MapperInterface $mapper, Form $form)
-    {
-        $this->mapper = $mapper;
-        $this->form = $form;
-    }
-
     /**
      * @return array
      */
     public function indexAction(): array
     {
         return [
-            'entries' => $this->mapper->findAll()
+            'entries' => $this->getRepository()->findAll()
         ];
     }
 
     /**
-     * @return array
+     * @return array|Response
      *
      * @throws \Exception
      */
@@ -57,37 +30,11 @@ class EntryController extends AbstractActionController implements ObjectManagerA
             $this->form->setData($request->getPost());
 
             if ($this->form->isValid()) {
-                if ($this->mapper->save($this->form->getData())) {
-                    $this->redirect()->toRoute('entries');
-                }
-            }
+                try {
+                    $this->persistEntityData($this->form->getData());
 
-        }
-
-        return [
-            'form' => $this->form, 'error' => $this->mapper->getExceptionMessage()
-        ];
-    }
-
-    /**
-     * @return array
-     *
-     * @throws \Exception
-     */
-    public function editAction()
-    {
-        $request = $this->getRequest();
-
-        /** @var Entry $category */
-        $entry = $this->mapper->find($this->params('id'));
-        $this->form->bind($entry);
-
-        if ($request->isPost()) {
-            $this->form->setData($request->getPost());
-
-            if ($this->form->isValid()) {
-                if ($this->mapper->save($this->form->getData())) {
-                    $this->redirect()->toRoute('entries');
+                    return $this->redirectToRoute('entries');
+                } catch (\Exception $e) {
                 }
             }
         }
@@ -97,16 +44,45 @@ class EntryController extends AbstractActionController implements ObjectManagerA
         ];
     }
 
+    /**
+     * @return array|Response
+     *
+     * @throws \Exception
+     */
+    public function editAction()
+    {
+        $request = $this->getRequest();
+
+        /** @var Entry $category */
+        $entry = $this->loadEntity($this->params('id'));
+        $this->form->bind($entry);
+
+        if ($request->isPost()) {
+            $this->form->setData($request->getPost());
+
+            if ($this->form->isValid()) {
+                try {
+                    $this->persistEntityData($this->form->getData());
+
+                    return $this->redirectToRoute('entries');
+                } catch (\Exception $e) {
+                }
+            }
+        }
+
+        return [
+            'form' => $this->form
+        ];
+    }
 
     /**
-     * @throws \Exception
+     * @return Response
      */
     public function deleteAction()
     {
-        $category = $this->mapper->find($this->params('id'));
+        $entry = $this->loadEntity($this->params('id'));
+        $this->removeEntity($entry);
 
-        $this->mapper->delete($category);
-
-        $this->redirect()->toRoute('categories');
+        return $this->redirectToRoute('entries');
     }
 }

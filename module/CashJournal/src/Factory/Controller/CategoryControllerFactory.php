@@ -3,14 +3,14 @@
 namespace CashJournal\Factory\Controller;
 
 use CashJournal\Form\CategoryForm;
-use CashJournal\Mapper\CategoryMapper;
+use CashJournal\Model\Category;
 use Interop\Container\ContainerInterface;
 use Interop\Container\Exception\ContainerException;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use CashJournal\Controller\CategoryController;
-use CashJournal\Filter\CategoryFieldSetFilter;
+use Doctrine\ORM\EntityManager;
 
 class CategoryControllerFactory implements FactoryInterface
 {
@@ -31,8 +31,13 @@ class CategoryControllerFactory implements FactoryInterface
     {
         $form = $container->get('FormElementManager')->get(CategoryForm::class);
 
+        /** @var EntityManager $entityManager */
+        $entityManager = $container->get(EntityManager::class);
+        $repository = $entityManager->getRepository(Category::class);
+
         return new CategoryController(
-            $container->get(CategoryMapper::class),
+            $entityManager,
+            $repository,
             $form
         );
     }

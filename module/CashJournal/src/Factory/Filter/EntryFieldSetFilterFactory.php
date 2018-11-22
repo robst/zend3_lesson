@@ -8,7 +8,6 @@ use Interop\Container\Exception\ContainerException;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use CashJournal\Mapper\CategoryMapper;
 
 class EntryFieldSetFilterFactory implements FactoryInterface
 {
@@ -28,9 +27,7 @@ class EntryFieldSetFilterFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $filter = new EntryFieldSetFilter(
-            $container->get(CategoryMapper::class)
-        );
+        $filter = new EntryFieldSetFilter();
 
         return $filter;
     }

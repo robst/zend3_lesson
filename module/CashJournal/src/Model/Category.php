@@ -3,7 +3,6 @@
 namespace CashJournal\Model;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 /**
@@ -22,7 +21,7 @@ class Category extends AbstractEntity
     private $issue;
 
     /**
-     * @var Collection|ArrayCollection|Entry[]
+     * @var Collection
      *
      * @ORM\OneToMany(
      *     targetEntity="CashJournal\Model\Entry",
@@ -50,7 +49,7 @@ class Category extends AbstractEntity
     }
 
     /**
-     * @return Collection|ArrayCollection|Entry[]
+     * @return Collection
      */
     public function getEntries(): Collection
     {
@@ -58,11 +57,16 @@ class Category extends AbstractEntity
     }
 
     /**
-     * @param Collection|ArrayCollection|Entry[] $entries
+     * @param Collection $entries
      */
     public function setEntries(Collection $entries): void
     {
         $this->entries = $entries;
+    }
+
+    public function getNumberOfEntries(): int
+    {
+        return $this->getEntries()->count();
     }
 
     /**
