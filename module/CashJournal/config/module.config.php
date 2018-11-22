@@ -11,16 +11,12 @@ use CashJournal\Factory\FieldSet\EntryFieldSetFactory;
 use CashJournal\Factory\Filter\EntryFieldSetFilterFactory;
 use CashJournal\Factory\Filter\EntryFormFilterFactory;
 use CashJournal\Factory\Form\CategoryFormFactory;
-use CashJournal\Factory\Mapper\CategoryMapperFactory;
-use CashJournal\Factory\Mapper\EntryMapperFactory;
 use CashJournal\Filter\EntryFieldSetFilter;
 use CashJournal\Filter\EntryFormFilter;
 use CashJournal\Form\EntryForm;
 use CashJournal\Factory\Form\EntryFormFactory;
 use CashJournal\Form\FieldSet\CategoryFieldSet;
 use CashJournal\Form\FieldSet\EntryFieldSet;
-use CashJournal\Mapper\CategoryMapper;
-use CashJournal\Mapper\EntryMapper;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 
 use Zend\Hydrator\ClassMethods;
@@ -51,8 +47,7 @@ return [
             HydratorOptionsInterface::class => ClassMethods::class,
         ],
         'factories' => [
-            CategoryMapper::class => CategoryMapperFactory::class,
-            EntryMapper::class => EntryMapperFactory::class,
+
         ],
     ],
 

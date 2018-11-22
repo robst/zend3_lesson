@@ -8,7 +8,7 @@
             $editLink = $this->url('categories', ['action' => 'edit', 'id' => $category->getId()]);
         ?>
     <tr>
-        <td><?php echo $category->getName() ?> <?php echo $category->getEntries()->count() ?></td>
+        <td><?php echo $category->getName() ?> <?php echo $category->getNumberOfEntries() ?></td>
         <td><a href="<?php echo $editLink ?>" class="btn btn-info">edit</a></td>
         <td>
             <form action="<?php echo $deleteLink ?>" method="post">

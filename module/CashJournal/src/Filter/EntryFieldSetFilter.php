@@ -2,7 +2,6 @@
 
 namespace CashJournal\Filter;
 
-use CashJournal\Mapper\MapperInterface;
 use Zend\Filter\StringTrim;
 use Zend\InputFilter\InputFilter;
 use Zend\Validator\Date;
@@ -12,21 +11,6 @@ use DateTime;
 
 class EntryFieldSetFilter extends InputFilter
 {
-    /**
-     * @var MapperInterface
-     */
-    protected $mapper;
-
-    /**
-     * EntryFieldSetFilter constructor.
-     *
-     * @param MapperInterface $mapper
-     */
-    public function __construct(MapperInterface $mapper)
-    {
-        $this->mapper = $mapper;
-    }
-
     /**
      * @{inheritDoc}
      */
@@ -54,25 +38,25 @@ class EntryFieldSetFilter extends InputFilter
             'filters' => [
                 [
                     'name' => Callback::class,
-                    'options' => array(
-                        'callback' => function($value) {
+                    'options' => [
+                        'callback' => function ($value) {
                             if (is_string($value)) {
                                 $value = new DateTime($value);
                             }
                             return $value;
                         },
-                    ),
+                    ],
                 ]
             ],
 
-            'validators' => array(
-                array(
+            'validators' => [
+                [
                     'name' => Date::class,
-                    'options' => array(
+                    'options' => [
                         'format' => 'Y-m-d',
-                    ),
-                ),
-            ),
+                    ],
+                ],
+            ],
         ]);
     }
 }

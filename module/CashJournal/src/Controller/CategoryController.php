@@ -2,47 +2,23 @@
 
 namespace CashJournal\Controller;
 
-use CashJournal\Mapper\MapperInterface;
 use CashJournal\Model\Category;
-use Zend\Form\Form;
-use Zend\Mvc\Controller\AbstractActionController;
+use \Zend\Http\Response;
 
 class CategoryController extends AbstractActionController
 {
-    /**
-     * @var MapperInterface
-     */
-    protected $mapper;
-
-    /**
-     * @var Form
-     */
-    protected $form;
-
-    /**
-     * CategoryController constructor.
-     *
-     * @param MapperInterface $mapper
-     * @param Form            $form
-     */
-    public function __construct(MapperInterface $mapper, Form $form)
-    {
-        $this->mapper = $mapper;
-        $this->form = $form;
-    }
-
     /**
      * @return array
      */
     public function indexAction(): array
     {
         return [
-            'categories' => $this->mapper->findAll()
+            'categories' => $this->getRepository()->findAll()
         ];
     }
 
     /**
-     * @return array
+     * @return array|Response
      *
      * @throws \Exception
      */
@@ -54,9 +30,12 @@ class CategoryController extends AbstractActionController
             $this->form->setData($request->getPost());
 
             if ($this->form->isValid()) {
-                $this->mapper->save($this->form->getData());
+                try {
+                    $this->persistEntityData($this->form->getData());
 
-                $this->redirect()->toRoute('categories');
+                    return $this->redirectToRoute('categories');
+                } catch (\Exception $e) {
+                }
             }
         }
 
@@ -66,7 +45,7 @@ class CategoryController extends AbstractActionController
     }
 
     /**
-     * @return array
+     * @return array|Response
      *
      * @throws \Exception
      */
@@ -75,15 +54,19 @@ class CategoryController extends AbstractActionController
         $request = $this->getRequest();
 
         /** @var Category $category */
-        $category = $this->mapper->find($this->params('id'));
+        $category = $this->loadEntity($this->params('id'));
         $this->form->bind($category);
 
         if ($request->isPost()) {
             $this->form->setData($request->getPost());
 
             if ($this->form->isValid()) {
-                $this->mapper->save($this->form->getData());
-                $this->redirect()->toRoute('categories');
+                try {
+                    $this->persistEntityData($this->form->getData());
+
+                    return $this->redirectToRoute('categories');
+                } catch (\Exception $e) {
+                }
             }
         }
 
@@ -92,13 +75,14 @@ class CategoryController extends AbstractActionController
         ];
     }
 
-
+    /**
+     * @return Response
+     */
     public function deleteAction()
     {
-        $category = $this->mapper->find($this->params('id'));
+        $category = $this->loadEntity($this->params('id'));
+        $this->removeEntity($category);
 
-        $this->mapper->delete($category);
-
-        $this->redirect()->toRoute('categories');
+        return $this->redirectToRoute('categories');
     }
 }
