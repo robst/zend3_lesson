@@ -49,9 +49,9 @@ class Category extends AbstractEntity
     }
 
     /**
-     * @return Collection
+     * @return null|Collection
      */
-    public function getEntries(): Collection
+    public function getEntries(): ?Collection
     {
         return $this->entries;
     }
