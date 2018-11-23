@@ -3,6 +3,7 @@
     <testsuites>
         <testsuite name="ZendSkeletonApplication Test Suite">
             <directory>./module/Application/test</directory>
+            <directory>./module/CashJournal/test</directory>
         </testsuite>
     </testsuites>
 </phpunit>
